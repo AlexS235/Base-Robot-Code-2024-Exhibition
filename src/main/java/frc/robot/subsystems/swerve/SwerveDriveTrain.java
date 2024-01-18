@@ -24,7 +24,7 @@ public class SwerveDriveTrain extends SubsystemBase {
   private SwerveDrivePoseEstimator swerveDrivePoseEstimator;
 
   private boolean isSlower = false;
-  private boolean isFieldOriented = true;
+  private boolean isFieldOriented = false;
 
   /** Creates a new SwerveDrive. */
   public SwerveDriveTrain() {
@@ -166,7 +166,7 @@ public class SwerveDriveTrain extends SubsystemBase {
   public Pose2d getPose() {
     return swerveDrivePoseEstimator.getEstimatedPosition();
   }
-
+  
   public void resetPose(Pose2d pose) {
     swerveDrivePoseEstimator.resetPosition(getRotation2dCCWPositive(), new SwerveModulePosition[] {
         frontLeft.getPosition(),
@@ -234,6 +234,18 @@ public class SwerveDriveTrain extends SubsystemBase {
   @Override
   public void periodic() {
     updateOdometry();
+    putAllInfoInSmartDashboard();
+  }
+
+  public void putAllInfoInSmartDashboard(){
+    frontLeft.putProcessedValues("FL");
+    frontRight.putProcessedValues("FR");
+    backLeft.putProcessedValues("BL");
+    backRight.putProcessedValues("BR");
+    frontLeft.putEncoderValuesInvertedApplied("FL");
+    frontRight.putEncoderValuesInvertedApplied("FR");
+    backLeft.putEncoderValuesInvertedApplied("BL");
+    backRight.putEncoderValuesInvertedApplied("BR");
   }
 
 }

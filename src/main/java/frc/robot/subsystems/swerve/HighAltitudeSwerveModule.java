@@ -46,27 +46,31 @@ public class HighAltitudeSwerveModule {
         directionMotor.setBrakeMode(false);
         this.isDirectionEncoderReversed = isDirectionEncoderReversed;
 
-        directionPIDController = new PIDController(HighAltitudeConstants.SWERVE_DIRECTION_KP, 0.025, 0.0);
+        directionPIDController = new PIDController(0.01, 0.00, 0.0);
         directionPIDController.enableContinuousInput(-Math.PI, Math.PI);
 
         absoluteEncoderController = new CANcoder(encodedTalonPort);
         this.isTalonEncoderReversed = isTalonEncoderReversed;
         this.encoderOffsetPulses = encoderOffsetPulses;
-        resetEncoders();
+        //resetEncoders();
     }
 
     public double getAbsoluteEncoderRad() {
+/*
         double angleRadians = absoluteEncoderController.getPosition().getValueAsDouble()
                 * HighAltitudeConstants.SWERVE_ABSOLUTE_ENCODER_RADIANS_PER_PULSE;
         angleRadians -= encoderOffsetPulses * HighAltitudeConstants.SWERVE_ABSOLUTE_ENCODER_RADIANS_PER_PULSE;
         return angleRadians * (isTalonEncoderReversed ? -1.0 : 1.0);
+  */
+        double angle = absoluteEncoderController.getPosition().getValueAsDouble() - encoderOffsetPulses;
+        return angle * HighAltitudeConstants.SWERVE_ABSOLUTE_ENCODER_RADIANS_PER_PULSE * (isTalonEncoderReversed ? -1.0 : 1.0);
     }
 
     public void resetEncoders() {
         driveMotor.setEncoderPosition(0);
-        recalculateWheelDirection();
+        //recalculateWheelDirection();
     }
-
+    // voy a hacer como q no existe
     public void recalculateWheelDirection() {
         directionMotor
                 .setEncoderPosition((int) ((isDirectionEncoderReversed ? -1.0 : 1.0) * (getAbsoluteEncoderRad()
@@ -157,9 +161,10 @@ public class HighAltitudeSwerveModule {
         SmartDashboard.putNumber(identifier + "AbsEncPos", absoluteEncoderController.getPosition().getValueAsDouble());
     }
 
-    public void putAbsEncPos(String identifier) {
-        SmartDashboard.putNumber(identifier + "AbsEncPos", absoluteEncoderController.getPosition().getValueAsDouble());
-
+    public void putEncoderValuesInvertedApplied(String identifier) {
+        SmartDashboard.putNumber(identifier + "DriveEncPos", getDriveEncoder());
+        SmartDashboard.putNumber(identifier + "DirEncPos", getDirectionEncoder());
+        SmartDashboard.putNumber(identifier + "AbsEncPos", absoluteEncoderController.getPosition().getValueAsDouble() * (isTalonEncoderReversed?-1.0 : 1.0));
     }
 
     public void putProcessedValues(String identifier) {

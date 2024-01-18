@@ -15,9 +15,9 @@ public class HighAltitudeConstants {
 
         /////////// KINEMATICS
         // Distance left - right (meters)
-        public static final double SWERVE_TRACK_WIDTH = 0.0254 * (24.0 - 2.0 * 2.625);
+        public static final double SWERVE_TRACK_WIDTH = 0.0254 * (28.5 - 2.0 * 2.625);
         // Distance front - back (meters)
-        public static final double SWERVE_WHEEL_BASE = 0.0254 * (32.0 - 2.0 * 2.625);
+        public static final double SWERVE_WHEEL_BASE = 0.0254 * (28.5 - 2.0 * 2.625);
 
         // FL, FR, BL, BR. Remember these cartesian coordinates consider the x axis to
         // be headed where the robot is pointing to. The y-axis direction could be a
@@ -43,7 +43,7 @@ public class HighAltitudeConstants {
 
         // Other
 
-        public static final double SWERVE_ABSOLUTE_ENCODER_PULSES_PER_REVOLUTION = 4096.0;
+        public static final double SWERVE_ABSOLUTE_ENCODER_PULSES_PER_REVOLUTION = 1.0; // antes 4096
         // encoder * this value = radians
         public static final double SWERVE_ABSOLUTE_ENCODER_RADIANS_PER_PULSE = (2.0 * Math.PI)
                         / SWERVE_ABSOLUTE_ENCODER_PULSES_PER_REVOLUTION;
@@ -52,7 +52,7 @@ public class HighAltitudeConstants {
 
         // The reported encoder position after one revolution, check encoder
         // specifications.
-        public static final double SWERVE_DRIVE_PULSES_PER_REVOLUTION = 2048.0;
+        public static final double SWERVE_DRIVE_PULSES_PER_REVOLUTION = 1.0;
         public static final double SWERVE_DRIVE_VELOCITY_SAMPLE_RATE_MS = 100.0;
 
         // In meters
@@ -85,7 +85,7 @@ public class HighAltitudeConstants {
 
         // The reported encoder position after one revolution, check encoder
         // specifications.
-        public static final double SWERVE_DIRECTION_PULSES_PER_REVOLUTION = 2048.0;
+        public static final double SWERVE_DIRECTION_PULSES_PER_REVOLUTION = 1.0;
         public static final double SWERVE_DIRECTION_VELOCITY_SAMPLE_RATE_MS = 100.0;
 
         // NEVER, ABSOLUTELY NEVER APPROXIMATE THIS, USE ONLY FRACTIONS WITH WHOLE
@@ -107,6 +107,6 @@ public class HighAltitudeConstants {
 
         //// DIRECTION PID
         public static final double SWERVE_DIRECTION_BRAKING_RADIANS = (Math.PI * 2) / 4; // 2pi/3
-        public static final double SWERVE_DIRECTION_KP = 0.8;
-        public static final double SWERVE_DIRECTION_KD = 0.4;
+        public static final double SWERVE_DIRECTION_KP = 0.0;
+        public static final double SWERVE_DIRECTION_KD = 0.0;
 }
