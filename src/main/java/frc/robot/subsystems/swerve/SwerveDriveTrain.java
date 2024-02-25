@@ -6,12 +6,15 @@ package frc.robot.subsystems.swerve;
 
 import java.util.ArrayList;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.HighAltitudeConstants;
 import frc.robot.Robot;
@@ -90,8 +93,40 @@ public class SwerveDriveTrain extends SubsystemBase {
             backLeft.getPosition(),
             backRight.getPosition()
         }, new Pose2d(0.0, 0.0, new Rotation2d(0)));
+
+    AutoBuilder.configureHolonomic(
+        this::getPose, // Robot pose supplier
+        this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+        this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+        this::driveRobotRelativeChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+        HighAltitudeConstants.HOLONOMIC_PATH_FOLLOWER_CONFIG,
+        () -> {
+          // Boolean supplier that controls when the path will be mirrored for the red
+          // alliance
+          // This will flip the path being followed to the red side of the field.
+          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+          var alliance = DriverStation.getAlliance();
+          if (alliance.isPresent()) {
+            return alliance.get() == DriverStation.Alliance.Red;
+          }
+          return false;
+        },
+        this // Reference to this subsystem to set requirements
+    );
   }
 
+  public ChassisSpeeds getRobotRelativeSpeeds() {
+    return HighAltitudeConstants.SWERVE_KINEMATICS.toChassisSpeeds(
+        frontLeft.getState(),
+        frontRight.getState(),
+        backLeft.getState(),
+        backRight.getState());
+  }
+
+  public void driveRobotRelativeChassisSpeeds(ChassisSpeeds chassisSpeeds) {
+    setModuleStates(HighAltitudeConstants.SWERVE_KINEMATICS.toSwerveModuleStates(chassisSpeeds));
+  }
   // By default, the Navx reports its angle as increasing when turning to its
   // right, but many wpilib functions consider the angle as increasing when moving
   // to the left (Counter Clock-Wise, or CCW).
@@ -166,7 +201,7 @@ public class SwerveDriveTrain extends SubsystemBase {
   public Pose2d getPose() {
     return swerveDrivePoseEstimator.getEstimatedPosition();
   }
-  
+
   public void resetPose(Pose2d pose) {
     swerveDrivePoseEstimator.resetPosition(getRotation2dCCWPositive(), new SwerveModulePosition[] {
         frontLeft.getPosition(),
@@ -237,7 +272,7 @@ public class SwerveDriveTrain extends SubsystemBase {
     putAllInfoInSmartDashboard();
   }
 
-  public void putAllInfoInSmartDashboard(){
+  public void putAllInfoInSmartDashboard() {
     frontLeft.putProcessedValues("FL");
     frontRight.putProcessedValues("FR");
     backLeft.putProcessedValues("BL");

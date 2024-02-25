@@ -4,12 +4,16 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 
 /** Add your docs here. */
 public class HighAltitudeConstants {
-     ////////////////////////// SWERVE //////////////////////////
+        ////////////////////////// SWERVE //////////////////////////
 
         // TODO: UPDATE ALL CONSTANTS
 
@@ -74,8 +78,8 @@ public class HighAltitudeConstants {
                         * SWERVE_DRIVE_METERS_PER_PULSE)
                         / SWERVE_DRIVE_VELOCITY_SAMPLE_RATE_MS;
 
-        // Constant for L3 Configuration
-        public static final double SWERVE_DRIVE_MAX_SPEED_METERS_PER_SECOND = 18 * 12 * 0.0254;
+        // Constant for L3 Configuration TODO: update for the students
+        public static final double SWERVE_DRIVE_MAX_SPEED_METERS_PER_SECOND = 16.6 * 12 * 0.0254;
 
         // Arbitrary to make controlling the swerve easier in teleop
         public static final double SWERVE_DRIVE_TELEOP_MAX_SPEED_METERS_PER_SECOND = SWERVE_DRIVE_MAX_SPEED_METERS_PER_SECOND
@@ -109,4 +113,12 @@ public class HighAltitudeConstants {
         public static final double SWERVE_DIRECTION_BRAKING_RADIANS = (Math.PI * 2) / 4; // 2pi/3
         public static final double SWERVE_DIRECTION_KP = 0.0;
         public static final double SWERVE_DIRECTION_KD = 0.0;
+
+        public static final HolonomicPathFollowerConfig HOLONOMIC_PATH_FOLLOWER_CONFIG = new HolonomicPathFollowerConfig(
+                        new PIDConstants(0.0, 0.0, 0.0), // Translation PID constants
+                        new PIDConstants(0.0, 0.0, 0.0), // Rotation PID constants
+                        SWERVE_DRIVE_TELEOP_MAX_SPEED_METERS_PER_SECOND, // Max module speed, in ms
+                        Math.hypot(HighAltitudeConstants.SWERVE_WHEEL_BASE / 2,
+                                        HighAltitudeConstants.SWERVE_TRACK_WIDTH / 2),
+                        new ReplanningConfig());
 }

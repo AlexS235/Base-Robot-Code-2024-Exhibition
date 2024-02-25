@@ -14,22 +14,22 @@ public class RobotContainer {
     private Navx navx;
     private SwerveDriveTrain swerveDriveTrain;
 
-    public RobotContainer(){
+    public RobotContainer() {
         navx = new Navx();
         swerveDriveTrain = new SwerveDriveTrain();
-        
+
     }
 
-    public void config(){
+    public void config() {
         OI.getInstance().ConfigureButtonBindings();
         swerveDriveTrain.setDefaultCommand(new DefaultSwerveDrive());
     }
 
-    public Navx getNavx(){
+    public Navx getNavx() {
         return navx;
     }
 
-    public SwerveDriveTrain getSwerveDriveTrain(){
+    public SwerveDriveTrain getSwerveDriveTrain() {
         return swerveDriveTrain;
     }
 }
